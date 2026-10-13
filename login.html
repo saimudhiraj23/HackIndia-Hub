@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — HackIndia Hub</title>
+  <meta name="description" content="Sign in to HackIndia Hub to discover, save, and track hackathons across India.">
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/auth.css">
+
+  <style>
+    /* ── Login page layout ─────────────────────────────────────────────── */
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-dark);
+      padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient glow blobs matching hero section */
+    .login-glow-1 {
+      position: fixed;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--saffron-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .login-glow-2 {
+      position: fixed;
+      bottom: -200px;
+      left: -200px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Card container ────────────────────────────────────────────────── */
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 460px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem 2.25rem 2rem;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    /* ── Brand header ──────────────────────────────────────────────────── */
+    .login-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.75rem;
+      text-decoration: none;
+    }
+    .login-brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--saffron), var(--cyan));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .login-brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    .login-brand-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--saffron);
+      background: var(--saffron-glow);
+      border: 1px solid var(--border-saffron);
+      border-radius: var(--radius-full);
+      padding: 0.15rem 0.5rem;
+    }
+
+    /* ── Heading ───────────────────────────────────────────────────────── */
+    .login-heading {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.3rem;
+    }
+    .login-subheading {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+      line-height: 1.5;
+    }
+
+    /* ── Tab switcher ──────────────────────────────────────────────────── */
+    .lp-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 1.5rem;
+    }
+    .lp-tab-btn {
+      flex: 1;
+      padding: 0.7rem 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+    }
+    .lp-tab-btn:hover { color: var(--text-main); }
+    .lp-tab-btn.active {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+    }
+    .lp-panel { display: none; }
+    .lp-panel.active { display: block; }
+
+    /* ── Form elements ─────────────────────────────────────────────────── */
+    .lp-form-field {
+      margin-bottom: 1.1rem;
+    }
+    .lp-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+    }
+    .lp-input-wrap {
+      position: relative;
+    }
+    .lp-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      padding: 0.7rem 0.9rem;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      outline: none;
+    }
+    .lp-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.12);
+    }
+    .lp-input::placeholder { color: var(--text-dim); }
+    .lp-input.input-error {
+      border-color: var(--rose);
+      box-shadow: 0 0 0 3px var(--rose-glow);
+    }
+    /* Password field has toggle button inside */
+    .lp-input-pw {
+      padding-right: 2.8rem;
+    }
+    .lp-pw-toggle {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 0.2rem;
+      display: flex;
+      align-items: center;
+      transition: color var(--transition-fast);
+      line-height: 0;
+    }
+    .lp-pw-toggle:hover { color: var(--text-muted); }
+
+    .lp-field-error {
+      font-size: 0.8rem;
+      color: var(--rose);
+      margin-top: 0.35rem;
+      display: none;
+    }
+    .lp-field-error.visible { display: block; }
+
+    /* ── Password strength ─────────────────────────────────────────────── */
+    .lp-pw-strength-bar {
+      height: 3px;
+      border-radius: 9999px;
+      background: var(--border-subtle);
+      margin-top: 0.45rem;
+      overflow: hidden;
+    }
+    .lp-pw-strength-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 9999px;
+      transition: width 0.28s ease, background 0.28s ease;
+    }
+    .lp-pw-strength-label {
+      font-size: 0.74rem;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
+    }
+
+    /* ── Select ────────────────────────────────────────────────────────── */
+    .lp-select {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      padding: 0.7rem 0.9rem;
+      outline: none;
+      transition: border-color var(--transition-fast);
+      cursor: pointer;
+    }
+    .lp-select:focus { border-color: var(--cyan); }
+    .lp-select option { background: var(--bg-surface); color: var(--text-main); }
+
+    /* ── 2-col grid ────────────────────────────────────────────────────── */
+    .lp-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    @media (max-width: 480px) {
+      .lp-grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* ── General form error banner ─────────────────────────────────────── */
+    .lp-error-banner {
+      background: rgba(244, 63, 94, 0.1);
+      border: 1px solid var(--rose-glow);
+      border-radius: var(--radius-sm);
+      color: var(--rose);
+      font-size: 0.85rem;
+      padding: 0.65rem 0.9rem;
+      margin-bottom: 1rem;
+      display: none;
+      line-height: 1.4;
+    }
+    .lp-error-banner.visible { display: block; }
+
+    /* ── Success banner ────────────────────────────────────────────────── */
+    .lp-success-banner {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--emerald-glow);
+      border-radius: var(--radius-sm);
+      color: var(--emerald);
+      font-size: 0.85rem;
+      padding: 0.65rem 0.9rem;
+      margin-bottom: 1rem;
+      display: none;
+      line-height: 1.4;
+    }
+    .lp-success-banner.visible { display: block; }
+
+    /* ── Submit button ─────────────────────────────────────────────────── */
+    .lp-submit-btn {
+      width: 100%;
+      padding: 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+      background: linear-gradient(135deg, var(--saffron), #ff9a3c);
+      color: #fff;
+      letter-spacing: 0.01em;
+      margin-top: 0.5rem;
+    }
+    .lp-submit-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+    .lp-submit-btn:active:not(:disabled) { transform: translateY(0); }
+    .lp-submit-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── Divider ───────────────────────────────────────────────────────── */
+    .lp-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+      color: var(--text-dim);
+      font-size: 0.78rem;
+    }
+    .lp-divider::before,
+    .lp-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    /* ── Footer links ──────────────────────────────────────────────────── */
+    .lp-footer-link {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 1.25rem;
+    }
+    .lp-footer-link a,
+    .lp-footer-link button.lp-link-btn {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: inherit;
+      padding: 0;
+    }
+    .lp-footer-link a:hover,
+    .lp-footer-link button.lp-link-btn:hover { text-decoration: underline; }
+
+    /* ── Forgot password hint ──────────────────────────────────────────── */
+    .lp-forgot-link {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-align: right;
+      margin-top: 0.3rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      display: block;
+      width: 100%;
+    }
+    .lp-forgot-link:hover { color: var(--text-muted); text-decoration: underline; }
+
+    /* ── Crypto warning ────────────────────────────────────────────────── */
+    .lp-crypto-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--amber-glow);
+      border-radius: var(--radius-sm);
+      color: var(--amber);
+      font-size: 0.8rem;
+      padding: 0.6rem 0.85rem;
+      margin-bottom: 1.25rem;
+      line-height: 1.45;
+      display: none;
+    }
+    .lp-crypto-warning.visible { display: block; }
+
+    /* ── Responsive tweaks ─────────────────────────────────────────────── */
+    @media (max-width: 520px) {
+      .login-card {
+        padding: 2rem 1.25rem 1.5rem;
+        border-radius: var(--radius-lg);
+      }
+      .login-heading { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-glow-1" aria-hidden="true"></div>
+  <div class="login-glow-2" aria-hidden="true"></div>
+
+  <main class="login-card" role="main">
+
+    <!-- Brand -->
+    <a href="login.html" class="login-brand" aria-label="HackIndia Hub home">
+      <div class="login-brand-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+      </div>
+      <span class="login-brand-name">HackIndia</span>
+      <span class="login-brand-badge">HUB 🇮🇳</span>
+    </a>
+
+    <!-- Crypto warning (shown if crypto.subtle is unavailable) -->
+    <div class="lp-crypto-warning" id="lpCryptoWarning" role="alert">
+      ⚠️ Secure password hashing requires a modern browser served over <strong>localhost or HTTPS</strong>.
+      Please use the local server: run <code>.\server.ps1</code> and open <strong>http://localhost:8080</strong>.
+    </div>
+
+    <!-- Tab switcher: Login / Sign Up -->
+    <div class="lp-tabs" role="tablist" aria-label="Authentication options">
+      <button
+        class="lp-tab-btn active"
+        id="lpTabBtnLogin"
+        role="tab"
+        aria-selected="true"
+        aria-controls="lpPanelLogin"
+        onclick="lpSwitchTab('login')"
+      >Sign In</button>
+      <button
+        class="lp-tab-btn"
+        id="lpTabBtnSignup"
+        role="tab"
+        aria-selected="false"
+        aria-controls="lpPanelSignup"
+        onclick="lpSwitchTab('signup')"
+      >Create Account</button>
+    </div>
+
+    <!-- ── LOGIN PANEL ─────────────────────────────────────────── -->
+    <div id="lpPanelLogin" class="lp-panel active" role="tabpanel" aria-labelledby="lpTabBtnLogin">
+
+      <h1 class="login-heading">Welcome back</h1>
+      <p class="login-subheading">Sign in to discover and save hackathons across India.</p>
+
+      <div class="lp-error-banner" id="lpLoginError" role="alert" aria-live="polite"></div>
+      <div class="lp-success-banner" id="lpLoginSuccess" role="status" aria-live="polite"></div>
+
+      <form id="lpLoginForm" novalidate autocomplete="on">
+
+        <div class="lp-form-field">
+          <label class="lp-label" for="lpLoginEmail">Email address</label>
+          <input
+            type="email"
+            id="lpLoginEmail"
+            class="lp-input"
+            autocomplete="email"
+            placeholder="you@college.edu"
+            required
+            aria-required="true"
+            aria-describedby="lpLoginEmailErr"
+          />
+          <span class="lp-field-error" id="lpLoginEmailErr" role="alert"></span>
+        </div>
+
+        <div class="lp-form-field">
+          <label class="lp-label" for="lpLoginPassword">Password</label>
+          <div class="lp-input-wrap">
+            <input
+              type="password"
+              id="lpLoginPassword"
+              class="lp-input lp-input-pw"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              required
+              aria-required="true"
+              aria-describedby="lpLoginPasswordErr"
+            />
+            <button
+              type="button"
+              class="lp-pw-toggle"
+              aria-label="Show password"
+              onclick="lpTogglePw('lpLoginPassword', this)"
+            >
+              <!-- Eye icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <span class="lp-field-error" id="lpLoginPasswordErr" role="alert"></span>
+          <button
+            type="button"
+            class="lp-forgot-link"
+            onclick="lpShowForgotHint()"
+            aria-label="Forgot password help"
+          >Forgot password?</button>
+        </div>
+
+        <button
+          type="submit"
+          id="lpLoginSubmitBtn"
+          class="lp-submit-btn"
+          onclick="lpHandleLogin(event)"
+        >Sign In</button>
+
+      </form>
+
+      <p class="lp-footer-link">
+        Don't have an account?
+        <button class="lp-link-btn" onclick="lpSwitchTab('signup')">Create one free</button>
+      </p>
+    </div>
+
+    <!-- ── SIGN UP PANEL ───────────────────────────────────────── -->
+    <div id="lpPanelSignup" class="lp-panel" role="tabpanel" aria-labelledby="lpTabBtnSignup">
+
+      <h1 class="login-heading">Join HackIndia Hub</h1>
+      <p class="login-subheading">Create a free account to save hackathons, post listings, and build teams.</p>
+
+      <div class="lp-error-banner" id="lpSignupError" role="alert" aria-live="polite"></div>
+      <div class="lp-success-banner" id="lpSignupSuccess" role="status" aria-live="polite"></div>
+
+      <form id="lpSignupForm" novalidate autocomplete="on">
+
+        <div class="lp-grid-2">
+          <div class="lp-form-field">
+            <label class="lp-label" for="lpSignupName">Full name</label>
+            <input
+              type="text"
+              id="lpSignupName"
+              class="lp-input"
+              autocomplete="name"
+              placeholder="Priya Sharma"
+              required
+              aria-required="true"
+              aria-describedby="lpSignupNameErr"
+            />
+            <span class="lp-field-error" id="lpSignupNameErr" role="alert"></span>
+          </div>
+          <div class="lp-form-field">
+            <label class="lp-label" for="lpSignupEmail">Email address</label>
+            <input
+              type="email"
+              id="lpSignupEmail"
+              class="lp-input"
+              autocomplete="email"
+              placeholder="you@college.edu"
+              required
+              aria-required="true"
+              aria-describedby="lpSignupEmailErr"
+            />
+            <span class="lp-field-error" id="lpSignupEmailErr" role="alert"></span>
+          </div>
+        </div>
+
+        <div class="lp-form-field">
+          <label class="lp-label" for="lpSignupPassword">Password</label>
+          <div class="lp-input-wrap">
+            <input
+              type="password"
+              id="lpSignupPassword"
+              class="lp-input lp-input-pw"
+              autocomplete="new-password"
+              placeholder="Min 8 chars, include a number"
+              required
+              aria-required="true"
+              aria-describedby="lpSignupPasswordErr lpSignupPwStrength"
+              oninput="lpUpdateStrength(this.value)"
+            />
+            <button
+              type="button"
+              class="lp-pw-toggle"
+              aria-label="Show password"
+              onclick="lpTogglePw('lpSignupPassword', this)"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="lp-pw-strength-bar" aria-hidden="true">
+            <div class="lp-pw-strength-fill" id="lpPwStrengthFill"></div>
+          </div>
+          <span class="lp-pw-strength-label" id="lpSignupPwStrength" aria-live="polite"></span>
+          <span class="lp-field-error" id="lpSignupPasswordErr" role="alert"></span>
+        </div>
+
+        <div class="lp-form-field">
+          <label class="lp-label" for="lpSignupCollege">College / University</label>
+          <input
+            type="text"
+            id="lpSignupCollege"
+            class="lp-input"
+            autocomplete="organization"
+            placeholder="e.g. CBIT, IIT Hyderabad, NIT Warangal"
+            required
+            aria-required="true"
+            aria-describedby="lpSignupCollegeErr"
+          />
+          <span class="lp-field-error" id="lpSignupCollegeErr" role="alert"></span>
+        </div>
+
+        <div class="lp-grid-2">
+          <div class="lp-form-field">
+            <label class="lp-label" for="lpSignupYear">Year of study</label>
+            <select id="lpSignupYear" class="lp-select" aria-describedby="lpSignupYearErr">
+              <option value="">Select year</option>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+              <option value="Postgraduate">Postgraduate</option>
+            </select>
+            <span class="lp-field-error" id="lpSignupYearErr" role="alert"></span>
+          </div>
+          <div class="lp-form-field">
+            <label class="lp-label" for="lpSignupState">State</label>
+            <select id="lpSignupState" class="lp-select" aria-describedby="lpSignupStateErr">
+              <option value="">Select state</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Delhi">Delhi-NCR</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="lp-field-error" id="lpSignupStateErr" role="alert"></span>
+          </div>
+        </div>
+
+        <div class="lp-form-field">
+          <label class="lp-label" for="lpSignupCity">City</label>
+          <input
+            type="text"
+            id="lpSignupCity"
+            class="lp-input"
+            autocomplete="address-level2"
+            placeholder="e.g. Hyderabad, Bengaluru"
+            required
+            aria-required="true"
+            aria-describedby="lpSignupCityErr"
+          />
+          <span class="lp-field-error" id="lpSignupCityErr" role="alert"></span>
+        </div>
+
+        <button
+          type="submit"
+          id="lpSignupSubmitBtn"
+          class="lp-submit-btn"
+          style="background: linear-gradient(135deg, var(--indigo), var(--cyan));"
+          onclick="lpHandleSignup(event)"
+        >Create Account 🚀</button>
+
+      </form>
+
+      <p class="lp-footer-link">
+        Already have an account?
+        <button class="lp-link-btn" onclick="lpSwitchTab('login')">Sign in</button>
+      </p>
+    </div>
+
+  </main>
+
+  <!-- auth engine must load before any auth calls below -->
+  <script src="js/auth.js"></script>
+  <script>
+  /**
+   * LOGIN PAGE CONTROLLER
+   * All inline — no separate file needed for a single-page gate.
+   * Uses auth.js functions: authLogin, authRegister, authIsLoggedIn,
+   *   normalizeEmail, authGetCurrentUser
+   */
+  (function () {
+
+    // ── Guard: show crypto warning if Web Crypto unavailable ──────────────
+    if (typeof crypto === 'undefined' || !crypto.subtle) {
+      var warn = document.getElementById('lpCryptoWarning');
+      if (warn) warn.classList.add('visible');
+    }
+
+    // ── Guard: already logged in → go straight to hub ────────────────────
+    if (typeof authIsLoggedIn === 'function' && authIsLoggedIn()) {
+      // Small delay so the page doesn't flash before redirect
+      window.location.replace('index.html');
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tab switching
+    // ─────────────────────────────────────────────────────────────────────
+    window.lpSwitchTab = function (tab) {
+      var loginBtn   = document.getElementById('lpTabBtnLogin');
+      var signupBtn  = document.getElementById('lpTabBtnSignup');
+      var loginPanel = document.getElementById('lpPanelLogin');
+      var signupPanel = document.getElementById('lpPanelSignup');
+
+      if (tab === 'login') {
+        loginBtn.classList.add('active');    loginBtn.setAttribute('aria-selected', 'true');
+        signupBtn.classList.remove('active'); signupBtn.setAttribute('aria-selected', 'false');
+        loginPanel.classList.add('active');
+        signupPanel.classList.remove('active');
+      } else {
+        signupBtn.classList.add('active');   signupBtn.setAttribute('aria-selected', 'true');
+        loginBtn.classList.remove('active');  loginBtn.setAttribute('aria-selected', 'false');
+        signupPanel.classList.add('active');
+        loginPanel.classList.remove('active');
+      }
+      // Clear banners when switching
+      ['lpLoginError','lpLoginSuccess','lpSignupError','lpSignupSuccess'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) { el.textContent = ''; el.classList.remove('visible'); }
+      });
+    };
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Password visibility toggle
+    // ─────────────────────────────────────────────────────────────────────
+    var EYE_OPEN = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    var EYE_CLOSED = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+    window.lpTogglePw = function (inputId, btn) {
+      var input = document.getElementById(inputId);
+      if (!input) return;
+      var showing = input.type === 'text';
+      input.type = showing ? 'password' : 'text';
+      btn.innerHTML = showing ? EYE_OPEN : EYE_CLOSED;
+      btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    };
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Password strength meter
+    // ─────────────────────────────────────────────────────────────────────
+    window.lpUpdateStrength = function (value) {
+      var fill  = document.getElementById('lpPwStrengthFill');
+      var label = document.getElementById('lpSignupPwStrength');
+      if (!fill || !label) return;
+
+      if (!value) {
+        fill.style.width = '0';
+        fill.style.background = '';
+        label.textContent = '';
+        return;
+      }
+
+      var hasDigit  = /\d/.test(value);
+      var hasUpper  = /[A-Z]/.test(value);
+      var hasSpecial = /[^A-Za-z0-9]/.test(value);
+      var isLong    = value.length >= 8;
+      var isVeryLong = value.length >= 12;
+
+      if (!isLong) {
+        fill.style.width = '28%';
+        fill.style.background = 'var(--rose)';
+        label.textContent = 'Weak — needs at least 8 characters';
+      } else if (!hasDigit || !hasUpper) {
+        fill.style.width = '55%';
+        fill.style.background = 'var(--amber)';
+        label.textContent = 'Fair — add an uppercase letter and a number';
+      } else if (isVeryLong && hasSpecial) {
+        fill.style.width = '100%';
+        fill.style.background = 'var(--emerald)';
+        label.textContent = 'Very strong ✓';
+      } else {
+        fill.style.width = '80%';
+        fill.style.background = 'var(--emerald)';
+        label.textContent = 'Strong ✓';
+      }
+    };
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Helpers
+    // ─────────────────────────────────────────────────────────────────────
+    function showError(bannerId, message) {
+      var el = document.getElementById(bannerId);
+      if (!el) return;
+      el.textContent = message;
+      el.classList.add('visible');
+    }
+    function clearBanner(bannerId) {
+      var el = document.getElementById(bannerId);
+      if (!el) return;
+      el.textContent = '';
+      el.classList.remove('visible');
+    }
+    function showSuccess(bannerId, message) {
+      var el = document.getElementById(bannerId);
+      if (!el) return;
+      el.textContent = message;
+      el.classList.add('visible');
+    }
+    function showFieldError(fieldId, errId, message) {
+      var input = document.getElementById(fieldId);
+      var err   = document.getElementById(errId);
+      if (input) input.classList.add('input-error');
+      if (err)   { err.textContent = message; err.classList.add('visible'); }
+    }
+    function clearFieldError(fieldId, errId) {
+      var input = document.getElementById(fieldId);
+      var err   = document.getElementById(errId);
+      if (input) input.classList.remove('input-error');
+      if (err)   { err.textContent = ''; err.classList.remove('visible'); }
+    }
+    function setLoading(btnId, loading, defaultText, loadingText) {
+      var btn = document.getElementById(btnId);
+      if (!btn) return;
+      btn.disabled = loading;
+      btn.textContent = loading ? loadingText : defaultText;
+    }
+
+    // Set server-side session cookie via the /api/set-session endpoint.
+    // Falls back silently if the server endpoint is unavailable (e.g. file:// mode).
+    function setServerSession(token) {
+      if (!token) return;
+      fetch('/api/set-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token }),
+        credentials: 'same-origin'
+      }).catch(function () { /* server may not support this — non-fatal */ });
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Forgot password
+    // ─────────────────────────────────────────────────────────────────────
+    window.lpShowForgotHint = function () {
+      showError('lpLoginError',
+        '🔒 Password reset requires an email provider, which is not configured. ' +
+        'Contact the admin or create a new account.'
+      );
+    };
+
+    // ─────────────────────────────────────────────────────────────────────
+    // LOGIN HANDLER
+    // ─────────────────────────────────────────────────────────────────────
+    window.lpHandleLogin = function (event) {
+      event.preventDefault();
+
+      clearBanner('lpLoginError');
+      clearBanner('lpLoginSuccess');
+      clearFieldError('lpLoginEmail',    'lpLoginEmailErr');
+      clearFieldError('lpLoginPassword', 'lpLoginPasswordErr');
+
+      var email    = (document.getElementById('lpLoginEmail')?.value    || '').trim();
+      var password = (document.getElementById('lpLoginPassword')?.value || '');
+
+      // Client-side validation
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      var valid = true;
+
+      if (!email) {
+        showFieldError('lpLoginEmail', 'lpLoginEmailErr', 'Email address is required.');
+        valid = false;
+      } else if (!emailRegex.test(email)) {
+        showFieldError('lpLoginEmail', 'lpLoginEmailErr', 'Enter a valid email address.');
+        valid = false;
+      }
+      if (!password) {
+        showFieldError('lpLoginPassword', 'lpLoginPasswordErr', 'Password is required.');
+        valid = false;
+      }
+      if (!valid) return;
+
+      setLoading('lpLoginSubmitBtn', true, 'Sign In', 'Signing in…');
+
+      authLogin({ email: email, password: password }).then(function (result) {
+        if (result.ok) {
+          showSuccess('lpLoginSuccess', 'Login successful! Redirecting…');
+          // Set server-side session cookie for the server-level redirect guard
+          var token = result.user ? (result.user.id + '.' + Date.now()) : ('sess.' + Date.now());
+          setServerSession(token);
+          // Small delay so user sees the success message
+          setTimeout(function () {
+            window.location.replace('index.html');
+          }, 600);
+        } else {
+          showError('lpLoginError', result.error || 'Invalid email or password.');
+        }
+      }).catch(function () {
+        showError('lpLoginError', 'An unexpected error occurred. Please try again.');
+      }).finally(function () {
+        setLoading('lpLoginSubmitBtn', false, 'Sign In', 'Signing in…');
+      });
+    };
+
+    // ─────────────────────────────────────────────────────────────────────
+    // SIGN UP HANDLER
+    // ─────────────────────────────────────────────────────────────────────
+    window.lpHandleSignup = function (event) {
+      event.preventDefault();
+
+      clearBanner('lpSignupError');
+      clearBanner('lpSignupSuccess');
+
+      // Clear all field errors first
+      var fields = [
+        ['lpSignupName',    'lpSignupNameErr'],
+        ['lpSignupEmail',   'lpSignupEmailErr'],
+        ['lpSignupPassword','lpSignupPasswordErr'],
+        ['lpSignupCollege', 'lpSignupCollegeErr'],
+        ['lpSignupYear',    'lpSignupYearErr'],
+        ['lpSignupState',   'lpSignupStateErr'],
+        ['lpSignupCity',    'lpSignupCityErr'],
+      ];
+      fields.forEach(function (pair) { clearFieldError(pair[0], pair[1]); });
+
+      var name     = (document.getElementById('lpSignupName')?.value     || '').trim();
+      var email    = (document.getElementById('lpSignupEmail')?.value    || '').trim();
+      var password = (document.getElementById('lpSignupPassword')?.value || '');
+      var college  = (document.getElementById('lpSignupCollege')?.value  || '').trim();
+      var year     = (document.getElementById('lpSignupYear')?.value     || '');
+      var state    = (document.getElementById('lpSignupState')?.value    || '');
+      var city     = (document.getElementById('lpSignupCity')?.value     || '').trim();
+
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      var valid = true;
+
+      if (!name || name.length < 2 || name.length > 80) {
+        showFieldError('lpSignupName', 'lpSignupNameErr', 'Name must be 2–80 characters.');
+        valid = false;
+      }
+      if (!email) {
+        showFieldError('lpSignupEmail', 'lpSignupEmailErr', 'Email address is required.');
+        valid = false;
+      } else if (!emailRegex.test(email)) {
+        showFieldError('lpSignupEmail', 'lpSignupEmailErr', 'Enter a valid email address.');
+        valid = false;
+      }
+      if (password.length < 8 || !/\d/.test(password)) {
+        showFieldError('lpSignupPassword', 'lpSignupPasswordErr', 'At least 8 characters including one number.');
+        valid = false;
+      }
+      if (!college) {
+        showFieldError('lpSignupCollege', 'lpSignupCollegeErr', 'College name is required.');
+        valid = false;
+      }
+      if (!year) {
+        showFieldError('lpSignupYear', 'lpSignupYearErr', 'Please select your year of study.');
+        valid = false;
+      }
+      if (!state) {
+        showFieldError('lpSignupState', 'lpSignupStateErr', 'Please select your state.');
+        valid = false;
+      }
+      if (!city) {
+        showFieldError('lpSignupCity', 'lpSignupCityErr', 'City is required.');
+        valid = false;
+      }
+      if (!valid) return;
+
+      setLoading('lpSignupSubmitBtn', true, 'Create Account 🚀', 'Creating account…');
+
+      authRegister({
+        name:            name,
+        email:           email,
+        password:        password,
+        college:         college,
+        year:            year,
+        state:           state,
+        city:            city,
+        course:          'B.Tech',
+        branch:          'Computer Science',
+        preferredMode:   'Hybrid',
+        experienceLevel: 'Beginner'
+      }).then(function (result) {
+        if (result.ok) {
+          showSuccess('lpSignupSuccess', 'Account created! Redirecting to HackIndia Hub…');
+          var token = result.user ? (result.user.id + '.' + Date.now()) : ('sess.' + Date.now());
+          setServerSession(token);
+          setTimeout(function () {
+            window.location.replace('index.html');
+          }, 700);
+        } else {
+          showError('lpSignupError', result.error || 'Registration failed. Please try again.');
+        }
+      }).catch(function () {
+        showError('lpSignupError', 'An unexpected error occurred. Please try again.');
+      }).finally(function () {
+        setLoading('lpSignupSubmitBtn', false, 'Create Account 🚀', 'Creating account…');
+      });
+    };
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Enter key submits the active form
+    // ─────────────────────────────────────────────────────────────────────
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      var loginPanel  = document.getElementById('lpPanelLogin');
+      var signupPanel = document.getElementById('lpPanelSignup');
+      if (loginPanel && loginPanel.classList.contains('active')) {
+        lpHandleLogin(e);
+      } else if (signupPanel && signupPanel.classList.contains('active')) {
+        lpHandleSignup(e);
+      }
+    });
+
+  }());
+  </script>
+
+</body>
+</html>

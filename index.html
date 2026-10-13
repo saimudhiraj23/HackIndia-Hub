@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Best Practices -->
+  <title>HackIndia Hub | Discover Hackathons Across India in One Place</title>
+  <meta name="description" content="Never miss a hackathon again. Discover college hackathons, AI/ML challenges, Smart India Hackathon, ETHIndia, Devfolio, and Unstop competitions across Hyderabad, Bengaluru, Pune, Delhi and all states.">
+  <meta name="keywords" content="hackathons india, college hackathons, hackathon hyderabad, smart india hackathon 2026, devfolio hackathons, student coding competitions, hackindia hub">
+  <meta name="author" content="HackIndia Hub Community">
+
+  <!-- Open Graph / WhatsApp Preview Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hackindiahub.in/">
+  <meta property="og:title" content="HackIndia Hub — Never Miss a Hackathon Again">
+  <meta property="og:description" content="Discover hackathons happening across India — all in one searchable, personalized place for college students.">
+  <meta property="og:image" content="assets/hero_banner.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HackIndia Hub — Never Miss a Hackathon Again">
+  <meta name="twitter:description" content="Discover hackathons happening across India — all in one searchable, personalized place.">
+  <meta name="twitter:image" content="assets/hero_banner.jpg">
+
+  <!-- Favicon & Stylesheets -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/map.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP NAVIGATION BAR
+       ======================================================================== -->
+  <header class="navbar" id="topNavbar">
+    <div class="container nav-container">
+      
+      <!-- Brand Logo -->
+      <a href="javascript:void(0)" onclick="navigateToView('discover')" class="brand-logo" id="navBrandLogo">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <span class="brand-name">HackIndia</span>
+        <span class="brand-badge">HUB 🇮🇳</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav>
+        <ul class="nav-links">
+          <li>
+            <a href="javascript:void(0)" class="nav-link active" data-view="discover" onclick="navigateToView('discover')">
+              🔍 Discover
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="nav-link" data-view="map" onclick="navigateToView('map')">
+              🗺️ Map View
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="nav-link" data-view="teams" onclick="navigateToView('teams')">
+              👥 Find Teammates
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="nav-link" data-view="dashboard" onclick="navigateToView('dashboard')">
+              🌟 For You
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="nav-link" data-view="admin" onclick="navigateToView('admin')">
+              🛡️ Admin
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Right Nav Actions -->
+      <div class="nav-actions">
+        <!-- Notification Bell -->
+        <button class="btn-icon-nav" id="btnNotificationBell" onclick="toggleNotificationDrawer()" title="Hackathon Alerts & Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+          </svg>
+          <span class="badge-counter notif-badge-count">2</span>
+        </button>
+
+        <!-- Post a Hackathon (Organizer Button) -->
+        <button class="btn btn-outline btn-sm" id="btnNavPostHackathon" onclick="document.getElementById('postHackathonModal').classList.add('active')">
+          ➕ Post Hackathon
+        </button>
+
+        <!-- Sign Out Button (visible only when logged in) -->
+        <button class="btn btn-outline btn-sm" id="btnNavLogout" style="display:none;" onclick="handleLogout()">Sign Out</button>
+
+        <!-- User Profile Pill -->
+        <div class="nav-profile-pill" id="navProfilePill" onclick="authIsLoggedIn() ? openAccountModal() : openAuthModal('login')" title="My Account / Sign In">
+          <div class="nav-avatar" id="navAvatar">SK</div>
+          <span class="nav-profile-name" id="navProfileName">Sai</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Drawer (Dropdown) -->
+    <div class="notification-drawer" id="notificationDrawer">
+      <div class="notif-header">
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff;">🔔 Hackathon Alerts</h4>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.72rem;" onclick="markAllNotificationsAsRead()">
+            Mark Read
+          </button>
+          <button class="btn btn-outline btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.72rem;" onclick="openAlertPreferencesModal()">
+            ⚙️ Prefs
+          </button>
+        </div>
+      </div>
+      <div class="notif-list" id="notificationItemsList">
+        <!-- Injected dynamically by notifications.js -->
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HERO SECTION
+       ======================================================================== -->
+  <section class="hero-section" id="heroSection">
+    <div class="hero-glow-blob hero-glow-1"></div>
+    <div class="hero-glow-blob hero-glow-2"></div>
+
+    <div class="container hero-content">
+      <!-- Live Status Pill -->
+      <div class="hero-pill-announcement">
+        <span>🔥 SIH 2026, ETHIndia & 140+ Hackathons Currently Open Across India</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="hero-title">
+        Never Miss a <span class="text-gradient-saffron">Hackathon</span> Again.
+      </h1>
+
+      <p class="hero-subtitle">
+        Discover hackathons happening across India — all in one searchable, personalized place for every engineering and college student.
+      </p>
+
+      <!-- Prominent Global Search Bar -->
+      <div class="hero-search-wrapper">
+        <div class="hero-search-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <input 
+          type="text" 
+          id="heroSearchInput" 
+          class="hero-search-input" 
+          placeholder="Search hackathons, technologies (AI, Web3), cities (Hyderabad, Bengaluru), colleges..."
+          autocomplete="off"
+        />
+        <button class="hero-search-btn" onclick="applyFilters()">
+          Search
+        </button>
+      </div>
+
+      <!-- Quick Category Chips -->
+      <div class="hero-quick-chips">
+        <span class="chip-label">Quick Filters:</span>
+        <button class="hero-chip" onclick="quickHeroCategoryFilter('live-synced')" style="background: rgba(16, 185, 129, 0.16); border-color: rgba(16, 185, 129, 0.5); color: #34d399; font-weight: 700;">⚡ Real-Time Live</button>
+        <button class="hero-chip" onclick="quickHeroCategoryFilter('AI/ML')">🤖 AI/ML</button>
+        <button class="hero-chip" onclick="quickHeroCategoryFilter('Generative AI')">✨ GenAI</button>
+        <button class="hero-chip" onclick="quickHeroCategoryFilter('Web Development')">🌐 Web Dev</button>
+        <button class="hero-chip" onclick="quickHeroCategoryFilter('Blockchain')">⚡ Web3</button>
+        <button class="hero-chip" onclick="quickHeroCategoryFilter('Cybersecurity')">🛡️ Cyber</button>
+        <button class="hero-chip" onclick="quickHeroCategoryFilter('IoT')">🤖 Robotics/IoT</button>
+        <button class="hero-chip" onclick="quickHeroCategoryFilter('Beginner')">🐣 Beginner Friendly</button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="hero-action-buttons">
+        <button class="btn btn-primary" onclick="navigateToView('discover')">
+          🔍 Explore Hackathons
+        </button>
+        <button class="btn btn-cyan" onclick="quickHeroCategoryFilter('Beginner')">
+          📅 Upcoming This Week
+        </button>
+        <button class="btn btn-outline" onclick="navigateToView('dashboard')">
+          ❤️ Saved Hackathons
+        </button>
+        <button class="btn btn-outline" onclick="document.getElementById('postHackathonModal').classList.add('active')">
+          ➕ Post a Hackathon
+        </button>
+      </div>
+
+      <!-- Live Statistics Grid -->
+      <div class="hero-stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="statCountHackathons">140+</div>
+          <div class="stat-label">Hackathons Listed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statCountCities">45+</div>
+          <div class="stat-label">Cities Covered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statCountColleges">350+</div>
+          <div class="stat-label">Colleges Participating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statCountThisWeek">18</div>
+          <div class="stat-label">Closing This Week</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       MAIN VIEWS CONTAINER
+       ======================================================================== -->
+  <main class="container">
+
+    <!-- VIEW 1: DISCOVER VIEW (Default) -->
+    <section id="discoverView">
+      
+      <!-- Section Header -->
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-tag">⚡ Central Hackathon Aggregator</span>
+          <h2 class="section-title">All India Hackathon Directory</h2>
+          <p class="section-desc">
+            Verified opportunities from IITs, Devfolio, Unstop, Government of India, Microsoft, and premier university tech fests.
+          </p>
+        </div>
+      </div>
+
+      <!-- Mobile Filter Toggle Bar (Visible on mobile/tablet screens) -->
+      <div class="mobile-filter-bar" id="mobileFilterBar">
+        <button class="mobile-filter-toggle-btn" id="mobileFilterToggleBtn" onclick="toggleMobileFilters()">
+          <span style="display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            <span>Filter Hackathons</span>
+          </span>
+          <span class="mobile-filter-chevron" id="mobileFilterChevron">▾</span>
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="resetAllFilters()" style="white-space: nowrap;">
+          Reset
+        </button>
+      </div>
+
+      <!-- Discovery Layout: Sidebar Filters + Main Grid / Map -->
+      <div class="discovery-layout">
+        
+        <!-- Filters Sidebar -->
+        <aside class="filters-sidebar" id="filtersSidebar">
+          <div class="filters-header">
+            <span class="filters-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              </svg>
+              Smart Filters
+            </span>
+            <button class="btn-reset-filters" onclick="resetAllFilters()">Reset All</button>
+          </div>
+
+          <!-- Quick Text Search in Sidebar -->
+          <div class="filter-group">
+            <label class="filter-label" for="quickSearchInput">Keyword Search</label>
+            <input type="text" id="quickSearchInput" class="filter-input" placeholder="e.g. Hyderabad, SIH, Python..." />
+          </div>
+
+          <!-- Location / State Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filterLocationState">Location / State</label>
+            <select id="filterLocationState" class="filter-select">
+              <option value="all">🇮🇳 All India (All States)</option>
+              <option value="Online">🌐 Online / Remote Only</option>
+              <option value="Telangana">Telangana (Hyderabad)</option>
+              <option value="Karnataka">Karnataka (Bengaluru)</option>
+              <option value="Maharashtra">Maharashtra (Mumbai / Pune)</option>
+              <option value="Delhi">Delhi-NCR (New Delhi)</option>
+              <option value="Tamil Nadu">Tamil Nadu (Chennai / Vellore)</option>
+              <option value="Kerala">Kerala (Kochi / Trivandrum)</option>
+              <option value="Andhra Pradesh">Andhra Pradesh (Vizag / Amaravati)</option>
+              <option value="West Bengal">West Bengal (Kolkata)</option>
+              <option value="Uttar Pradesh">Uttar Pradesh (Noida / Kanpur)</option>
+              <option value="Gujarat">Gujarat (Ahmedabad / GIFT City)</option>
+              <option value="Rajasthan">Rajasthan (Jaipur / Pilani)</option>
+            </select>
+          </div>
+
+          <!-- Mode Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filterMode">Event Mode</label>
+            <select id="filterMode" class="filter-select">
+              <option value="all">All Modes</option>
+              <option value="Online">🌐 Online Only</option>
+              <option value="Offline">📍 Offline Only</option>
+              <option value="Hybrid">🔀 Hybrid</option>
+            </select>
+          </div>
+
+          <!-- Technology / Theme Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filterTech">Primary Technology</label>
+            <select id="filterTech" class="filter-select">
+              <option value="all">All Technologies</option>
+              <option value="AI/ML">Artificial Intelligence / ML</option>
+              <option value="Generative AI">Generative AI & LLMs</option>
+              <option value="Web Development">Web Development (Full Stack)</option>
+              <option value="App Development">Mobile Apps (Flutter/React Native)</option>
+              <option value="Cybersecurity">Cybersecurity & Ethical Hacking</option>
+              <option value="Blockchain">Blockchain & Web3</option>
+              <option value="IoT">Robotics & IoT Hardware</option>
+              <option value="Cloud">Cloud & DevOps (AWS/Azure/GCP)</option>
+              <option value="Data Science">Data Science & Analytics</option>
+              <option value="Open Innovation">Open Innovation</option>
+            </select>
+          </div>
+
+          <!-- Difficulty Level Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filterDifficulty">Difficulty Level</label>
+            <select id="filterDifficulty" class="filter-select">
+              <option value="all">All Levels</option>
+              <option value="Beginner">🐣 Beginner Friendly</option>
+              <option value="Intermediate">⚡ Intermediate</option>
+              <option value="Advanced">🔥 Advanced / National Finalist</option>
+            </select>
+          </div>
+
+          <!-- Eligibility Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filterEligibility">Eligibility</label>
+            <select id="filterEligibility" class="filter-select">
+              <option value="all">All Eligible</option>
+              <option value="college">College / University Students</option>
+              <option value="beginner">1st & 2nd Year Friendly</option>
+              <option value="open">Open to Everyone</option>
+            </select>
+          </div>
+
+          <!-- Prize Pool Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filterPrize">Minimum Prize Pool</label>
+            <select id="filterPrize" class="filter-select">
+              <option value="all">Any Prize Amount</option>
+              <option value="100000">₹1,00,000+ (1 Lakh+)</option>
+              <option value="500000">₹5,00,000+ (5 Lakhs+)</option>
+              <option value="1000000">₹10,00,000+ (10 Lakhs+)</option>
+              <option value="2500000">₹25,00,000+ (25 Lakhs+)</option>
+            </select>
+          </div>
+
+          <!-- Real-Time Data Source Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filterDataSource">Data Source & Sync</label>
+            <select id="filterDataSource" class="filter-select">
+              <option value="all">⚡ All Sources (Live + Curated)</option>
+              <option value="live-only">🟢 Real-Time Daily Live Feeds Only</option>
+              <option value="devfolio">Devfolio Live API</option>
+              <option value="unstop">Unstop University API</option>
+              <option value="curated">Curated Premier (AICTE SIH & IITs)</option>
+            </select>
+          </div>
+        </aside>
+
+        <!-- Main Discovery Display Area -->
+        <main class="discovery-content-area">
+          
+          <!-- View Bar: Result count, Sort by, List vs Map Toggle -->
+          <div class="discovery-main-header">
+            <div class="result-count-info">
+              <span>Showing:</span>
+              <span class="result-count-number" id="discoveryResultCount">Loading...</span>
+            </div>
+
+            <div class="view-sort-controls">
+              <!-- Sort Dropdown -->
+              <div class="sort-select-wrapper">
+                <span>Sort by:</span>
+                <select id="sortBySelect" class="filter-select" style="width: auto; padding: 0.4rem 0.75rem;">
+                  <option value="deadline">⏳ Deadline (Closing Soonest)</option>
+                  <option value="prize-high">💰 Prize Pool (High to Low)</option>
+                  <option value="popular">🔥 Most Popular</option>
+                  <option value="newest">🆕 Recently Added</option>
+                </select>
+              </div>
+
+              <!-- List / Map View Toggles -->
+              <div class="view-mode-toggles">
+                <button class="view-toggle-btn active" id="toggleListView" onclick="switchViewMode('list')">
+                  📋 List
+                </button>
+                <button class="view-toggle-btn" id="toggleMapView" onclick="switchViewMode('map')">
+                  🗺️ Map
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Container for List View -->
+          <div id="discoveryResultsSection">
+            <div class="hackathons-grid" id="hackathonsGridList">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+
+          <!-- Container for Map View -->
+          <div id="mapViewSection" style="display: none;">
+            <div class="map-container-box">
+              <div class="map-header-bar">
+                <div>
+                  <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff;">Interactive India Hackathon Map</h3>
+                  <p style="font-size: 0.85rem; color: var(--text-muted);">Hover and click on any state or tech hub to explore offline and hybrid hackathons.</p>
+                </div>
+                <div class="map-legend">
+                  <div class="legend-item"><span class="legend-dot high"></span> High Activity (15+)</div>
+                  <div class="legend-item"><span class="legend-dot med"></span> Active Hub (5-14)</div>
+                  <div class="legend-item"><span class="legend-dot low"></span> Emerging</div>
+                </div>
+              </div>
+              <div id="indiaMapWrapper">
+                <!-- SVG injected dynamically by map.js -->
+              </div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </section>
+
+    <!-- VIEW 2: TEAM FORMATION HUB ("Find Teammates") -->
+    <section id="teamsView" style="display: none;">
+      <div class="teams-hero-banner">
+        <div>
+          <span class="section-tag">👥 Hacker Match & Squad Builder</span>
+          <h2 style="font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem;">
+            Find Hackathon Teammates Across India
+          </h2>
+          <p style="color: var(--text-muted); max-width: 600px; font-size: 0.95rem;">
+            Need a frontend designer? Looking for an AI prompt engineer or Solidity smart contract dev? Connect with student builders and win together.
+          </p>
+        </div>
+        <button class="btn btn-primary" onclick="openPostTeamModal()">
+          ➕ Post Teammate Request
+        </button>
+      </div>
+
+      <!-- Teams Filter Bar -->
+      <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+        <select id="teamFilterRole" class="filter-select" style="max-width: 240px;" onchange="renderTeamsView()">
+          <option value="all">All Roles Needed</option>
+          <option value="Frontend">Frontend Developer (React/Next)</option>
+          <option value="Backend">Backend / Cloud Developer</option>
+          <option value="AI">AI/ML Engineer</option>
+          <option value="Solidity">Smart Contract / Web3 Dev</option>
+          <option value="UI/UX">UI/UX Designer</option>
+          <option value="Embedded">Robotics / Embedded IoT</option>
+        </select>
+        <select id="teamFilterExp" class="filter-select" style="max-width: 200px;" onchange="renderTeamsView()">
+          <option value="all">All Experience Levels</option>
+          <option value="Beginner">Beginner Friendly</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      <!-- Teams Grid -->
+      <div class="teams-grid" id="teamsGridContainer">
+        <!-- Rendered dynamically by teams.js -->
+      </div>
+    </section>
+
+    <!-- VIEW 3: PERSONALIZED STUDENT DASHBOARD -->
+    <section id="dashboardView" style="display: none;">
+      <div id="dashboardContentWrapper">
+        <!-- Rendered dynamically by dashboard.js -->
+      </div>
+    </section>
+
+    <!-- VIEW 4: ADMIN CONTROL ROOM -->
+    <section id="adminView" style="display: none;">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-tag">🛡️ Moderation & Verification Portal</span>
+          <h2 class="section-title">HackIndia Hub Control Room</h2>
+          <p class="section-desc">
+            Review organizer submissions, detect duplicate listings, audit user reports, and maintain platform integrity.
+          </p>
+        </div>
+      </div>
+      <div id="adminViewContent">
+        <!-- Rendered dynamically by admin.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       MODALS SYSTEM
+       ======================================================================== -->
+
+  <!-- 1. HACKATHON DETAILS MODAL -->
+  <div class="modal-backdrop" id="hackathonDetailsModal">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeModal('hackathonDetailsModal')" title="Close">✕</button>
+
+      <div class="details-modal-header">
+        <img id="modalDetailImg" src="assets/hero_banner.jpg" alt="Hackathon Banner" class="details-header-img" />
+        <div class="details-header-overlay"></div>
+        <div class="details-header-info">
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <span id="modalDetailStatusBadge" class="status-pill status-open">🟢 Open</span>
+            <span class="verified-badge">Verified ✓</span>
+          </div>
+          <h2 id="modalDetailTitle" style="font-size: 1.6rem; font-weight: 800; color: #fff; line-height: 1.2;">
+            AI Innovation Challenge 2026
+          </h2>
+          <div id="modalDetailOrganizer" style="font-size: 0.85rem; color: var(--cyan); margin-top: 0.35rem;">
+            Organized by IIT Hyderabad & T-Hub
+          </div>
+        </div>
+      </div>
+
+      <div class="details-modal-body">
+        <!-- Highlights Strip -->
+        <div class="details-highlight-strip">
+          <div class="strip-item">
+            <span class="strip-label">Prize Pool</span>
+            <span class="strip-value" id="modalStripPrize" style="color: #fbbf24; font-family: var(--font-mono);">₹5,00,000</span>
+          </div>
+          <div class="strip-item">
+            <span class="strip-label">Location & Mode</span>
+            <span class="strip-value" id="modalStripLocation">Hyderabad (Hybrid)</span>
+          </div>
+          <div class="strip-item">
+            <span class="strip-label">Event Dates</span>
+            <span class="strip-value" id="modalStripDates">Oct 24–26, 2026</span>
+          </div>
+          <div class="strip-item">
+            <span class="strip-label">Team Size</span>
+            <span class="strip-value" id="modalStripTeam">2–4 Members</span>
+          </div>
+        </div>
+
+        <!-- Verification Box -->
+        <div class="source-verification-box" id="modalDetailSourceBox">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="details-tabs">
+          <button class="details-tab-btn active" data-tab="overview" onclick="switchModalTab('overview')">
+            📄 Overview & Problem
+          </button>
+          <button class="details-tab-btn" data-tab="tracks" onclick="switchModalTab('tracks')">
+            🎯 Tracks & Themes
+          </button>
+          <button class="details-tab-btn" data-tab="prizes" onclick="switchModalTab('prizes')">
+            🏆 Prizes & Bounties
+          </button>
+          <button class="details-tab-btn" data-tab="timeline" onclick="switchModalTab('timeline')">
+            ⏳ Timeline & Milestones
+          </button>
+          <button class="details-tab-btn" data-tab="faqs" onclick="switchModalTab('faqs')">
+            ❓ FAQs & Rules
+          </button>
+        </div>
+
+        <!-- Tab 1: Overview -->
+        <div id="modalTab-overview" class="details-tab-content active">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;">Event Description</h4>
+          <p id="modalDetailFullDesc" style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem;">
+            Description goes here...
+          </p>
+
+          <div style="background: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="font-size: 0.85rem; margin-bottom: 0.6rem;"><strong>📍 Physical Venue:</strong> <span id="modalDetailVenue" style="color: var(--text-muted);">IIT Hyderabad Campus</span></div>
+            <div style="font-size: 0.85rem; margin-bottom: 0.6rem;"><strong>🎓 Eligibility:</strong> <span id="modalDetailEligibility" style="color: var(--text-muted);">College Students</span></div>
+            <div style="font-size: 0.85rem;"><strong>⚡ Difficulty:</strong> <span id="modalDetailDifficulty" style="color: var(--cyan);">Intermediate</span></div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Tracks -->
+        <div id="modalTab-tracks" class="details-tab-content">
+          <div class="tracks-grid" id="modalDetailTracks">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Tab 3: Prizes -->
+        <div id="modalTab-prizes" class="details-tab-content">
+          <div class="prize-tier-grid" id="modalDetailPrizes">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Tab 4: Timeline -->
+        <div id="modalTab-timeline" class="details-tab-content">
+          <div class="timeline-list" id="modalDetailTimeline">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Tab 5: FAQs -->
+        <div id="modalTab-faqs" class="details-tab-content">
+          <div id="modalDetailFaqs">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="details-footer-actions">
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-outline btn-sm" id="modalActionSave">
+              🤍 Save Hackathon
+            </button>
+            <button class="btn btn-outline btn-sm" id="modalActionCalendar">
+              📅 Add to Calendar
+            </button>
+            <button class="btn btn-outline btn-sm" id="modalActionShare">
+              📤 Share
+            </button>
+          </div>
+
+          <button class="btn btn-cyan btn-lg" id="modalActionRegister">
+            🚀 Go to Official Registration ↗
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ORGANIZER PORTAL: POST A HACKATHON MODAL -->
+  <div class="modal-backdrop" id="postHackathonModal">
+    <div class="modal-box" style="max-width: 760px;">
+      <button class="modal-close-btn" onclick="closeModal('postHackathonModal')">✕</button>
+      <div style="padding: 2rem;">
+        <div style="margin-bottom: 1.5rem;">
+          <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--saffron-light); font-weight: 700;">Organizer Portal</span>
+          <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff;">Post a Hackathon</h2>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.25rem;">
+            Every listing undergoes verification to protect Indian students from fraudulent competitions.
+          </p>
+        </div>
+
+        <form id="postHackathonForm" onsubmit="handleOrganizerSubmit(event)">
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="orgEventTitle">Hackathon Name *</label>
+              <input type="text" id="orgEventTitle" class="form-input" placeholder="e.g. Hyderabad AI Conclave 2026" required />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="orgOrganizerName">Organizer Name *</label>
+              <input type="text" id="orgOrganizerName" class="form-input" placeholder="e.g. CBIT ACM Chapter / T-Hub" required />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="orgType">Organizer Type</label>
+              <select id="orgType" class="form-select">
+                <option value="College / University">College / University</option>
+                <option value="Tech Company">Tech Enterprise / Startup</option>
+                <option value="Government Agency">Government / Public Body</option>
+                <option value="Developer Community">Developer Community</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="orgMode">Mode *</label>
+              <select id="orgMode" class="form-select">
+                <option value="Online">Online / Virtual</option>
+                <option value="Offline">Offline / Physical Campus</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="orgCity">City (If Offline/Hybrid)</label>
+              <input type="text" id="orgCity" class="form-input" placeholder="e.g. Hyderabad" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="orgState">State</label>
+              <select id="orgState" class="form-select">
+                <option value="All India">All India</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Delhi">Delhi-NCR</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Rajasthan">Rajasthan</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="orgVenue">Physical Venue & Address</label>
+            <input type="text" id="orgVenue" class="form-input" placeholder="e.g. CBIT Campus Auditorium, Gandipet, Hyderabad" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="orgStartDate">Start Date *</label>
+              <input type="date" id="orgStartDate" class="form-input" required />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="orgEndDate">End Date *</label>
+              <input type="date" id="orgEndDate" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="orgDeadline">Registration Deadline *</label>
+              <input type="date" id="orgDeadline" class="form-input" required />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="orgPrizePool">Total Prize Pool (₹ INR) *</label>
+              <input type="number" id="orgPrizePool" class="form-input" placeholder="e.g. 200000" required />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="orgTeamSize">Team Size</label>
+              <input type="text" id="orgTeamSize" class="form-input" placeholder="e.g. 2–4 Members" value="2–4 Members" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="orgDifficulty">Difficulty</label>
+              <select id="orgDifficulty" class="form-select">
+                <option value="Beginner">Beginner Friendly</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="orgEligibility">Eligibility Criteria</label>
+            <input type="text" id="orgEligibility" class="form-input" placeholder="e.g. College Students (B.Tech, MCA, BCA)" value="College Students (B.Tech, MCA, BCA)" />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="orgTechnologies">Technologies & Themes (Comma separated)</label>
+            <input type="text" id="orgTechnologies" class="form-input" placeholder="e.g. AI/ML, Python, Web Development, Cloud" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="orgRegUrl">Official Registration URL *</label>
+              <input type="url" id="orgRegUrl" class="form-input" placeholder="https://unstop.com/..." required />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="orgSourceUrl">Verification Source URL (College/Org site) *</label>
+              <input type="url" id="orgSourceUrl" class="form-input" placeholder="https://cbit.ac.in/events/..." required />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="orgContactEmail">Organizer Official Email *</label>
+            <input type="email" id="orgContactEmail" class="form-input" placeholder="convenor@cbit.ac.in" required />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="orgDescription">Event Description & Problem Statement</label>
+            <textarea id="orgDescription" class="form-textarea" rows="3" placeholder="Describe the themes, guidelines, and what students will build..."></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('postHackathonModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit for Verification ⏳</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. STUDENT PROFILE & PREFERENCES EDIT MODAL -->
+  <div class="modal-backdrop" id="profileEditModal">
+    <div class="modal-box" style="max-width: 680px;">
+      <button class="modal-close-btn" onclick="closeModal('profileEditModal')">✕</button>
+      <div style="padding: 2rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem;">
+          Edit Student Profile & Preferences
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Our smart engine uses these details to personalize your hackathon recommendations and match teammates.
+        </p>
+
+        <form onsubmit="saveEditedProfile(event)">
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="editProfileName">Full Name</label>
+              <input type="text" id="editProfileName" class="form-input" required />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="editProfileCollege">College / University</label>
+              <input type="text" id="editProfileCollege" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="editProfileCourse">Degree / Course</label>
+              <input type="text" id="editProfileCourse" class="form-input" placeholder="e.g. B.Tech, MCA, BCA" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="editProfileBranch">Branch / Specialization</label>
+              <input type="text" id="editProfileBranch" class="form-input" placeholder="e.g. Computer Science" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="editProfileYear">Year of Study</label>
+              <select id="editProfileYear" class="form-select">
+                <option value="1st Year">1st Year (Freshman)</option>
+                <option value="2nd Year">2nd Year (Sophomore)</option>
+                <option value="3rd Year">3rd Year (Junior)</option>
+                <option value="4th Year">4th Year (Senior)</option>
+                <option value="Postgraduate">Postgraduate / Masters</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="editProfileExp">Experience Level</label>
+              <select id="editProfileExp" class="form-select">
+                <option value="Beginner">Beginner (1st or 2nd Hackathon)</option>
+                <option value="Intermediate">Intermediate (Built projects)</option>
+                <option value="Advanced">Advanced (Hackathon winner)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="editProfileCity">City</label>
+              <input type="text" id="editProfileCity" class="form-input" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="editProfileState">State</label>
+              <select id="editProfileState" class="form-select">
+                <option value="Telangana">Telangana</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Delhi">Delhi-NCR</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Gujarat">Gujarat</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="editProfileSkills">Technical Skills (Comma separated)</label>
+            <input type="text" id="editProfileSkills" class="form-input" placeholder="Python, React, JavaScript, AI/ML, Flutter" />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="editProfileInterests">Interest Themes (Comma separated)</label>
+            <input type="text" id="editProfileInterests" class="form-input" placeholder="Artificial Intelligence, FinTech, Web3, Civic Tech" />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="editProfileMode">Preferred Hackathon Mode</label>
+            <select id="editProfileMode" class="form-select">
+              <option value="Hybrid">Hybrid (Both Online & Offline)</option>
+              <option value="Online">Online Only</option>
+              <option value="Offline">Offline / Physical Hackathons</option>
+            </select>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('profileEditModal')">Cancel</button>
+            <button type="submit" class="btn btn-cyan">Save Profile Preferences</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. POST TEAMMATE REQUEST MODAL -->
+  <div class="modal-backdrop" id="postTeamModal">
+    <div class="modal-box" style="max-width: 640px;">
+      <button class="modal-close-btn" onclick="closeModal('postTeamModal')">✕</button>
+      <div style="padding: 2rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem;">
+          Post a Teammate Request
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Describe your squad opening to connect with talented builders across India.
+        </p>
+
+        <form onsubmit="submitNewTeamPost(event)">
+          <div class="form-field">
+            <label class="form-label" for="postTeamHackathon">Target Hackathon *</label>
+            <select id="postTeamHackathon" class="form-select">
+              <!-- Injected by teams.js -->
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="postTeamRole">Role Needed *</label>
+            <input type="text" id="postTeamRole" class="form-input" placeholder="e.g. Frontend Developer (React/Next.js) or AI Researcher" required />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="postTeamDesc">What are you planning to build? *</label>
+            <textarea id="postTeamDesc" class="form-textarea" rows="3" placeholder="Explain your concept and problem statement..." required></textarea>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="postTeamSkills">Skills Required (Comma separated)</label>
+            <input type="text" id="postTeamSkills" class="form-input" placeholder="React, Tailwind, Web Audio API, UI/UX" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="postTeamMaxMembers">Max Team Capacity</label>
+              <input type="number" id="postTeamMaxMembers" class="form-input" value="4" min="2" max="6" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="postTeamExp">Experience Level Preferred</label>
+              <select id="postTeamExp" class="form-select">
+                <option value="Beginner">Beginner (Learning Together)</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="postTeamDiscord">Discord Handle / WhatsApp Contact *</label>
+            <input type="text" id="postTeamDiscord" class="form-input" placeholder="discord_handle#1234 or +91 9876543210" required />
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('postTeamModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Publish Request 🚀</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. JOIN TEAM REQUEST MODAL -->
+  <div class="modal-backdrop" id="joinTeamModal">
+    <div class="modal-box" style="max-width: 580px;">
+      <button class="modal-close-btn" onclick="closeModal('joinTeamModal')">✕</button>
+      <div style="padding: 2rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem;">
+          Connect with Team Creator
+        </h2>
+        <div style="background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: var(--radius-md); padding: 1rem; margin: 1rem 0;">
+          <div style="font-size: 0.82rem; color: var(--cyan); font-weight: 700;" id="joinTeamTargetTitle">Hackathon Title</div>
+          <div style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-top: 0.25rem;">
+            Role: <span id="joinTeamRoleSpan" style="color: var(--saffron-light);">Role</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-dim); margin-top: 0.25rem;">
+            Posted by <span id="joinTeamCreatorSpan" style="color: #fff;">Creator</span> • Contact: <span id="joinTeamDiscordContact" style="color: var(--cyan);">Handle</span>
+          </div>
+        </div>
+
+        <form onsubmit="sendJoinTeamRequest(event)">
+          <div class="form-field">
+            <label class="form-label" for="joinTeamIntroMsg">Your Message / Pitch to Creator</label>
+            <textarea id="joinTeamIntroMsg" class="form-textarea" rows="4" required></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('joinTeamModal')">Cancel</button>
+            <button type="submit" class="btn btn-cyan">Send Join Request 💬</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. SHARE & WHATSAPP PREVIEW MODAL -->
+  <div class="modal-backdrop" id="shareModal">
+    <div class="modal-box" style="max-width: 600px;">
+      <button class="modal-close-btn" onclick="closeModal('shareModal')">✕</button>
+      <div style="padding: 2rem;">
+        <h2 id="shareModalTitle" style="font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem;">
+          Share Hackathon
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          WhatsApp and social links are optimized with OpenGraph cards for beautiful previews.
+        </p>
+
+        <!-- Simulated WhatsApp OpenGraph Preview Card -->
+        <div id="waPreviewCardContainer">
+          <!-- Populated by calendar-share.js -->
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="shareMessagePreviewText">Formatted WhatsApp / Chat Message</label>
+          <textarea id="shareMessagePreviewText" class="form-textarea" rows="5" readonly style="font-size: 0.85rem;"></textarea>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem;">
+          <button class="btn btn-primary btn-sm" onclick="shareToWhatsApp()" style="background: #25d366; color: #000; font-weight: 700;">
+            💬 Share to WhatsApp
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="shareToLinkedIn()">
+            💼 LinkedIn
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="shareToTwitter()">
+            🐦 Twitter/X
+          </button>
+          <button class="btn btn-cyan btn-sm" onclick="copyShareLink()">
+            📋 Copy Link
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. CALENDAR INTEGRATION MODAL -->
+  <div class="modal-backdrop" id="calendarModal">
+    <div class="modal-box" style="max-width: 540px;">
+      <button class="modal-close-btn" onclick="closeModal('calendarModal')">✕</button>
+      <div style="padding: 2rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem;">
+          Add to Your Calendar 📅
+        </h2>
+        <div style="margin: 1.25rem 0; padding: 1rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+          <div id="calEventName" style="font-weight: 700; color: #fff; font-size: 1rem;">Event</div>
+          <div id="calEventDates" style="font-size: 0.85rem; color: var(--cyan); margin-top: 0.25rem;">Dates</div>
+          <div id="calEventLocation" style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem;">Location</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <button class="btn btn-outline" onclick="addToGoogleCalendar()" style="justify-content: flex-start; padding: 0.85rem 1.25rem;">
+            <span>🗓️ Google Calendar</span>
+          </button>
+          <button class="btn btn-outline" onclick="addToOutlookCalendar()" style="justify-content: flex-start; padding: 0.85rem 1.25rem;">
+            <span>📧 Outlook Calendar</span>
+          </button>
+          <button class="btn btn-cyan" onclick="downloadIcsFile()" style="justify-content: flex-start; padding: 0.85rem 1.25rem;">
+            <span>🍎 Apple / Native Calendar (.ICS Download)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. REPORT HACKATHON MODAL (Trust & Safety) -->
+  <div class="modal-backdrop" id="reportHackathonModal">
+    <div class="modal-box" style="max-width: 520px;">
+      <button class="modal-close-btn" onclick="closeModal('reportHackathonModal')">✕</button>
+      <div style="padding: 2rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--rose); margin-bottom: 0.35rem;">
+          🚩 Report Hackathon Listing
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Reporting: <strong id="reportModalHackTitle" style="color: #fff;">Title</strong>
+        </p>
+
+        <form onsubmit="submitReport(event)">
+          <div class="form-field">
+            <label class="form-label" for="reportReason">Reason for Flagging</label>
+            <select id="reportReason" class="form-select">
+              <option value="Fake or Phishing Registration Link">Fake or Phishing Registration Link</option>
+              <option value="Event Already Expired or Cancelled">Event Already Expired or Cancelled</option>
+              <option value="Incorrect Prize Pool or Dates">Incorrect Prize Pool or Dates</option>
+              <option value="Unauthorized / Impersonating College">Unauthorized / Impersonating College</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="reportDetails">Provide Proof or Details</label>
+            <textarea id="reportDetails" class="form-textarea" rows="3" placeholder="Paste link to official circular or mention discrepancies..." required></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('reportHackathonModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="background: var(--rose);">Submit Report</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. ALERT PREFERENCES MODAL -->
+  <div class="modal-backdrop" id="alertPreferencesModal">
+    <div class="modal-box" style="max-width: 520px;">
+      <button class="modal-close-btn" onclick="closeModal('alertPreferencesModal')">✕</button>
+      <div style="padding: 2rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.35rem;">
+          🔔 Notification & Alert Preferences
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Customize which deadline reminders and new event discoveries you receive.
+        </p>
+
+        <form onsubmit="saveAlertPreferences(event)">
+          <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; cursor: pointer;">
+              <input type="checkbox" checked style="accent-color: var(--cyan); width: 18px; height: 18px;" />
+              <span>🔥 New Hackathons Matching My Skills</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; cursor: pointer;">
+              <input type="checkbox" checked style="accent-color: var(--cyan); width: 18px; height: 18px;" />
+              <span>⏰ 24-Hour & 3-Day Deadline Countdowns</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; cursor: pointer;">
+              <input type="checkbox" checked style="accent-color: var(--cyan); width: 18px; height: 18px;" />
+              <span>📍 Hackathons Near My City (Hyderabad / Telangana)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; cursor: pointer;">
+              <input type="checkbox" checked style="accent-color: var(--cyan); width: 18px; height: 18px;" />
+              <span>💬 Weekly WhatsApp Hackathon Digest</span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('alertPreferencesModal')">Cancel</button>
+            <button type="submit" class="btn btn-cyan">Save Preferences</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. AUTH MODAL (Login / Sign Up) -->
+  <div class='modal-backdrop' id='authModal'>
+    <div class='modal-box' style='max-width: 480px;'>
+      <button class='modal-close-btn' onclick="closeModal('authModal')" aria-label='Close'>✕</button>
+      <div style='padding: 2rem;'>
+        <div style='text-align:center; margin-bottom:1.5rem;'>
+          <div style='font-size:1.75rem; margin-bottom:0.35rem;'>🚀</div>
+          <h2 style='font-size:1.4rem; font-weight:800; color:#fff;' id='authModalTitle'>Welcome Back</h2>
+          <p style='font-size:0.85rem; color:var(--text-muted);' id='authModalSubtitle'>Sign in to save hackathons, post listings, and build teams.</p>
+        </div>
+        <div class='auth-tabs' role='tablist'>
+          <button class='auth-tab-btn active' id='authTabBtnLogin' role='tab' aria-selected='true' aria-controls='authTabLogin' onclick="switchAuthTab('login')">Login</button>
+          <button class='auth-tab-btn' id='authTabBtnSignup' role='tab' aria-selected='false' aria-controls='authTabSignup' onclick="switchAuthTab('signup')">Sign Up</button>
+        </div>
+        <!-- Login Tab -->
+        <div class='auth-tab-panel active' id='authTabLogin' role='tabpanel'>
+          <form id='authLoginForm' onsubmit='handleLogin(event)' novalidate>
+            <div class='form-field'>
+              <label class='form-label' for='authLoginEmail'>Email Address</label>
+              <input type='email' id='authLoginEmail' class='form-input' autocomplete='email' required placeholder='your@college.edu' />
+            </div>
+            <div class='form-field'>
+              <label class='form-label' for='authLoginPassword'>Password</label>
+              <input type='password' id='authLoginPassword' class='form-input' autocomplete='current-password' required placeholder='Your password' />
+            </div>
+            <div class='auth-field-error' id='authLoginError' role='alert' aria-live='polite'></div>
+            <div style='margin-top:1.25rem;'>
+              <button type='submit' class='btn btn-cyan' id='authLoginSubmitBtn' style='width:100%;'>Sign In</button>
+            </div>
+          </form>
+          <p style='text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:1rem;'>
+            New here? <a href='javascript:void(0)' onclick="switchAuthTab('signup')" style='color:var(--cyan);'>Create an account</a>
+          </p>
+        </div>
+        <!-- Signup Tab -->
+        <div class='auth-tab-panel' id='authTabSignup' role='tabpanel'>
+          <form id='authSignupForm' onsubmit='handleSignup(event)' novalidate>
+            <div class='form-grid-2'>
+              <div class='form-field'>
+                <label class='form-label' for='authSignupName'>Full Name *</label>
+                <input type='text' id='authSignupName' class='form-input' autocomplete='name' required placeholder='Your Name' />
+              </div>
+              <div class='form-field'>
+                <label class='form-label' for='authSignupEmail'>Email *</label>
+                <input type='email' id='authSignupEmail' class='form-input' autocomplete='email' required placeholder='your@college.edu' />
+              </div>
+            </div>
+            <div class='form-field'>
+              <label class='form-label' for='authSignupPassword'>Password * (min 8 chars, include a number)</label>
+              <input type='password' id='authSignupPassword' class='form-input' autocomplete='new-password' required placeholder='Create a strong password' oninput='updatePasswordStrength(this.value)' />
+              <div class='auth-pw-strength-bar' aria-hidden='true'><div class='auth-pw-strength-fill' id='authPwStrengthFill'></div></div>
+              <div class='auth-pw-strength-label' id='authPwStrengthLabel'></div>
+            </div>
+            <div class='form-field'>
+              <label class='form-label' for='authSignupConfirm'>Confirm Password *</label>
+              <input type='password' id='authSignupConfirm' class='form-input' autocomplete='new-password' required placeholder='Repeat your password' />
+            </div>
+            <div class='form-field'>
+              <label class='form-label' for='authSignupCollege'>College / University *</label>
+              <input type='text' id='authSignupCollege' class='form-input' required placeholder='e.g. CBIT, NIT Warangal' />
+            </div>
+            <div class='form-grid-2'>
+              <div class='form-field'>
+                <label class='form-label' for='authSignupCity'>City *</label>
+                <input type='text' id='authSignupCity' class='form-input' required placeholder='e.g. Hyderabad' />
+              </div>
+              <div class='form-field'>
+                <label class='form-label' for='authSignupState'>State *</label>
+                <select id='authSignupState' class='form-select' required>
+                  <option value=''>Select State</option>
+                  <option value='Telangana'>Telangana</option>
+                  <option value='Karnataka'>Karnataka</option>
+                  <option value='Maharashtra'>Maharashtra</option>
+                  <option value='Delhi'>Delhi-NCR</option>
+                  <option value='Tamil Nadu'>Tamil Nadu</option>
+                  <option value='Kerala'>Kerala</option>
+                  <option value='Andhra Pradesh'>Andhra Pradesh</option>
+                  <option value='West Bengal'>West Bengal</option>
+                  <option value='Uttar Pradesh'>Uttar Pradesh</option>
+                  <option value='Gujarat'>Gujarat</option>
+                  <option value='Rajasthan'>Rajasthan</option>
+                  <option value='Other'>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class='auth-field-error' id='authSignupError' role='alert' aria-live='polite'></div>
+            <div style='margin-top:1.25rem;'>
+              <button type='submit' class='btn btn-primary' id='authSignupSubmitBtn' style='width:100%;'>Create Account 🚀</button>
+            </div>
+          </form>
+          <p style='text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:1rem;'>
+            Already have an account? <a href='javascript:void(0)' onclick="switchAuthTab('login')" style='color:var(--cyan);'>Sign in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. ACCOUNT MANAGEMENT MODAL -->
+  <div class='modal-backdrop' id='accountModal'>
+    <div class='modal-box' style='max-width: 680px;'>
+      <button class='modal-close-btn' onclick="closeModal('accountModal')" aria-label='Close'>✕</button>
+      <div style='padding: 2rem;'>
+        <h2 style='font-size:1.5rem; font-weight:800; color:#fff; margin-bottom:0.25rem;'>My Account</h2>
+        <p style='font-size:0.85rem; color:var(--text-muted); margin-bottom:0;'>Manage your profile, password, and account settings.</p>
+
+        <!-- Section 1: Profile & Preferences -->
+        <div class='account-section'>
+          <div class='account-section-title'>Profile &amp; Preferences</div>
+          <form id='accountProfileForm' onsubmit='handleUpdateAccount(event)'>
+            <div class='form-grid-2'>
+              <div class='form-field'>
+                <label class='form-label' for='acctName'>Full Name</label>
+                <input type='text' id='acctName' class='form-input' placeholder='Your Name' />
+              </div>
+              <div class='form-field'>
+                <label class='form-label' for='acctCollege'>College / University</label>
+                <input type='text' id='acctCollege' class='form-input' placeholder='e.g. CBIT, NIT Warangal' />
+              </div>
+            </div>
+            <div class='form-grid-2'>
+              <div class='form-field'>
+                <label class='form-label' for='acctCourse'>Degree / Course</label>
+                <input type='text' id='acctCourse' class='form-input' placeholder='e.g. B.Tech, MCA' />
+              </div>
+              <div class='form-field'>
+                <label class='form-label' for='acctBranch'>Branch / Specialization</label>
+                <input type='text' id='acctBranch' class='form-input' placeholder='e.g. Computer Science' />
+              </div>
+            </div>
+            <div class='form-grid-2'>
+              <div class='form-field'>
+                <label class='form-label' for='acctYear'>Year of Study</label>
+                <select id='acctYear' class='form-select'>
+                  <option value='1st Year'>1st Year (Freshman)</option>
+                  <option value='2nd Year'>2nd Year (Sophomore)</option>
+                  <option value='3rd Year'>3rd Year (Junior)</option>
+                  <option value='4th Year'>4th Year (Senior)</option>
+                  <option value='Postgraduate'>Postgraduate / Masters</option>
+                </select>
+              </div>
+              <div class='form-field'>
+                <label class='form-label' for='acctCity'>City</label>
+                <input type='text' id='acctCity' class='form-input' placeholder='e.g. Hyderabad' />
+              </div>
+            </div>
+            <div class='form-grid-2'>
+              <div class='form-field'>
+                <label class='form-label' for='acctState'>State</label>
+                <select id='acctState' class='form-select'>
+                  <option value=''>Select State</option>
+                  <option value='Telangana'>Telangana</option>
+                  <option value='Karnataka'>Karnataka</option>
+                  <option value='Maharashtra'>Maharashtra</option>
+                  <option value='Delhi'>Delhi-NCR</option>
+                  <option value='Tamil Nadu'>Tamil Nadu</option>
+                  <option value='Kerala'>Kerala</option>
+                  <option value='Andhra Pradesh'>Andhra Pradesh</option>
+                  <option value='West Bengal'>West Bengal</option>
+                  <option value='Uttar Pradesh'>Uttar Pradesh</option>
+                  <option value='Gujarat'>Gujarat</option>
+                  <option value='Rajasthan'>Rajasthan</option>
+                  <option value='Other'>Other</option>
+                </select>
+              </div>
+              <div class='form-field'>
+                <label class='form-label' for='acctMode'>Preferred Mode</label>
+                <select id='acctMode' class='form-select'>
+                  <option value='Hybrid'>Hybrid (Online &amp; Offline)</option>
+                  <option value='Online'>Online Only</option>
+                  <option value='Offline'>Offline / Physical</option>
+                </select>
+              </div>
+            </div>
+            <div class='form-grid-2'>
+              <div class='form-field'>
+                <label class='form-label' for='acctSkills'>Technical Skills (comma separated)</label>
+                <input type='text' id='acctSkills' class='form-input' placeholder='Python, React, AI/ML' />
+              </div>
+              <div class='form-field'>
+                <label class='form-label' for='acctExp'>Experience Level</label>
+                <select id='acctExp' class='form-select'>
+                  <option value='Beginner'>Beginner</option>
+                  <option value='Intermediate'>Intermediate</option>
+                  <option value='Advanced'>Advanced</option>
+                </select>
+              </div>
+            </div>
+            <div class='form-field'>
+              <label class='form-label' for='acctInterests'>Interest Themes (comma separated)</label>
+              <input type='text' id='acctInterests' class='form-input' placeholder='AI, FinTech, Web3' />
+            </div>
+            <div class='auth-field-error' id='accountProfileError' role='alert' aria-live='polite'></div>
+            <div style='margin-top:1.25rem;'>
+              <button type='submit' class='btn btn-cyan'>Save Profile</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Section 2: Change Password -->
+        <div class='account-section'>
+          <div class='account-section-title'>Change Password</div>
+          <form id='accountPasswordForm' onsubmit='handleChangePassword(event)'>
+            <div class='form-field'>
+              <label class='form-label' for='acctCurrentPw'>Current Password</label>
+              <input type='password' id='acctCurrentPw' class='form-input' autocomplete='current-password' placeholder='Enter current password' />
+            </div>
+            <div class='form-field'>
+              <label class='form-label' for='acctNewPw'>New Password (min 8 chars, include a number)</label>
+              <input type='password' id='acctNewPw' class='form-input' autocomplete='new-password' placeholder='New password' />
+            </div>
+            <div class='form-field'>
+              <label class='form-label' for='acctConfirmPw'>Confirm New Password</label>
+              <input type='password' id='acctConfirmPw' class='form-input' autocomplete='new-password' placeholder='Repeat new password' />
+            </div>
+            <div class='auth-field-error' id='accountPasswordError' role='alert' aria-live='polite'></div>
+            <div style='margin-top:1.25rem;'>
+              <button type='submit' class='btn btn-outline'>Update Password</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Section 3: Danger Zone -->
+        <div class='account-section danger-zone-section'>
+          <div class='account-section-title'>⚠️ Danger Zone</div>
+          <form id='accountDeleteForm' onsubmit='handleDeleteAccount(event)'>
+            <p style='font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;'>
+              Permanently deletes your account and all saved data. This cannot be undone.
+            </p>
+            <div class='form-field'>
+              <label class='form-label' for='acctDeletePw'>Enter your password to confirm</label>
+              <input type='password' id='acctDeletePw' class='form-input' placeholder='Enter your password to confirm' />
+            </div>
+            <div class='auth-field-error' id='accountDeleteError' role='alert' aria-live='polite'></div>
+            <div style='margin-top:1.25rem;'>
+              <button type='submit' class='btn' style='background:var(--rose); color:#fff;'>Delete My Account</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       FLOATING AI ASSISTANT FAB & DRAWER
+       ======================================================================== -->
+  <button class="ai-assistant-fab" id="aiAssistantFab" onclick="toggleAiDrawer()" title="AI Hackathon Matcher">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
+      <rect x="4" y="8" width="16" height="12" rx="2"/>
+      <circle cx="9" cy="14" r="1.5"/>
+      <circle cx="15" cy="14" r="1.5"/>
+    </svg>
+    <span>AI Matcher</span>
+  </button>
+
+  <div class="ai-drawer" id="aiAssistantDrawer">
+    <div class="ai-drawer-header">
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
+        <span style="font-size: 1.3rem;">🤖</span>
+        <div>
+          <h3 style="font-size: 1rem; font-weight: 800; color: #fff;">HackIndia AI Assistant</h3>
+          <span style="font-size: 0.72rem; color: var(--cyan);">● Active Matcher & Squad Advisor</span>
+        </div>
+      </div>
+      <button class="modal-close-btn" style="position: static;" onclick="toggleAiDrawer()">✕</button>
+    </div>
+
+    <div class="ai-messages-container" id="aiMessagesContainer">
+      <!-- Chat history rendered dynamically -->
+    </div>
+
+    <!-- Quick Presets -->
+    <div style="padding: 0 1.25rem 0.5rem;">
+      <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.35rem;">
+        Quick Questions:
+      </div>
+      <div class="ai-quick-prompts">
+        <button class="ai-prompt-btn" onclick="sendAiMessage('I am a 1st year beginner with Python. Which hackathons accept me?')">
+          🐣 I'm a 1st-year beginner. Where can I start?
+        </button>
+        <button class="ai-prompt-btn" onclick="sendAiMessage('What are the best AI hackathons in Hyderabad or Bengaluru?')">
+          🧠 Best AI & GenAI hackathons near Hyderabad?
+        </button>
+        <button class="ai-prompt-btn" onclick="sendAiMessage('How should we structure a 4-person hackathon winning team?')">
+          👥 What is the winning 4-person team formula?
+        </button>
+      </div>
+    </div>
+
+    <div class="ai-input-bar">
+      <input type="text" id="aiChatInput" class="form-input" placeholder="Ask AI about skills, teams, or hackathons..." onkeydown="if(event.key==='Enter') sendAiMessage()" />
+      <button class="btn btn-cyan btn-sm" onclick="sendAiMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand-logo" style="margin-bottom: 1rem;">
+            <div class="brand-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <span class="brand-name">HackIndia</span>
+            <span class="brand-badge">HUB 🇮🇳</span>
+          </a>
+          <p class="footer-brand-p">
+            Building the single unified discovery engine for every college coder, hacker, and innovator in India. Never miss a deadline again.
+          </p>
+          <div style="margin-top: 1.25rem;" class="footer-trust-badge">
+            ✓ 100% Verified Authentic Hackathon Sources
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Browse by Hub</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" class="footer-link" onclick="filterByStateAndSwitchList('Telangana')">Hackathons in Hyderabad</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="filterByStateAndSwitchList('Karnataka')">Hackathons in Bengaluru</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="filterByStateAndSwitchList('Maharashtra')">Hackathons in Mumbai & Pune</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="filterByStateAndSwitchList('Delhi')">Hackathons in Delhi-NCR</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="filterByStateAndSwitchList('Tamil Nadu')">Hackathons in Chennai & Vellore</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Categories</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" class="footer-link" onclick="quickHeroCategoryFilter('AI/ML')">AI & Machine Learning</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="quickHeroCategoryFilter('Generative AI')">Generative AI Challenges</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="quickHeroCategoryFilter('Blockchain')">Web3 & Ethereum Hackathons</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="quickHeroCategoryFilter('Beginner')">Beginner Friendly</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="navigateToView('teams')">Find Teammates</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">For Organizers</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" class="footer-link" onclick="document.getElementById('postHackathonModal').classList.add('active')">Post a Hackathon</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="navigateToView('admin')">Admin Moderation Queue</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="showToast('Verification Guidelines: Official university or company domain email required.', 'info')">Verification Standards</a></li>
+            <li><a href="javascript:void(0)" class="footer-link" onclick="openAlertPreferencesModal()">WhatsApp Alerts API</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © 2026 HackIndia Hub. Built with pride for Indian Student Developers.
+        </div>
+        <div>
+          Data aggregated ethically from official public university portals, Devfolio, Unstop & AICTE SIH.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       MOBILE BOTTOM NAVIGATION
+       ======================================================================== -->
+  <div class="mobile-bottom-nav">
+    <a href="javascript:void(0)" class="mobile-nav-item active" onclick="navigateToView('discover')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Discover</span>
+    </a>
+    <a href="javascript:void(0)" class="mobile-nav-item" onclick="navigateToView('map')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+      <span>Map</span>
+    </a>
+    <a href="javascript:void(0)" class="mobile-nav-item" onclick="navigateToView('teams')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Teams</span>
+    </a>
+    <a href="javascript:void(0)" class="mobile-nav-item" onclick="navigateToView('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>For You</span>
+    </a>
+    <a href="javascript:void(0)" class="mobile-nav-item" onclick="toggleNotificationDrawer()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Alerts</span>
+    </a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       AUTH GATE — runs before any other script.
+       Redirects unauthenticated visitors to login.html.
+       auth.js is loaded inline here (its path must match the src below).
+       ════════════════════════════════════════════════════════════════════ -->
+  <script>
+    /**
+     * Early auth gate — executes synchronously before any app code loads.
+     * Reads the same localStorage key used by auth.js (hackindia_auth_session).
+     * If no valid session exists, redirects immediately to login.html.
+     * This prevents the main interface from rendering for unauthenticated users.
+     */
+    (function earlyAuthGate() {
+      var AUTH_SESSION_KEY = 'hackindia_auth_session';
+      var session = null;
+      try {
+        var raw = localStorage.getItem(AUTH_SESSION_KEY);
+        if (raw) session = JSON.parse(raw);
+      } catch (e) { /* corrupt storage — treat as logged out */ }
+
+      var isLoggedIn = !!(session && session.userId);
+      if (!isLoggedIn) {
+        // Replace so the back button on login.html doesn't loop back here
+        window.location.replace('login.html');
+      }
+    }());
+  </script>
+
+  <!-- JavaScript Scripts Hierarchy -->
+  <script src="js/data.js"></script>
+  <script src="js/live-sync.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/auth-ui.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/teams.js"></script>
+  <script src="js/organizer.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/ai-assistant.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/calendar-share.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
