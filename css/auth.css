@@ -1,0 +1,121 @@
+/* ==========================================================================
+   HACKINDIA HUB - AUTH MODAL STYLES
+   Uses only CSS variables from styles.css.
+   ========================================================================== */
+
+/* ── Auth Tab Bar ────────────────────────────────────────────────────────── */
+.auth-tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 1.5rem;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--transition-fast), border-bottom-color var(--transition-fast);
+}
+
+.auth-tab-btn.active {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+}
+
+/* ── Auth Tab Panels ─────────────────────────────────────────────────────── */
+.auth-tab-panel {
+  display: none;
+}
+
+.auth-tab-panel.active {
+  display: block;
+}
+
+/* ── Field-level Validation Error ────────────────────────────────────────── */
+.auth-field-error {
+  font-size: 0.82rem;
+  color: var(--rose);
+  margin-top: 0.4rem;
+  min-height: 1.2em;
+}
+
+.auth-field-error:empty {
+  display: none;
+}
+
+/* ── Password Strength Bar ───────────────────────────────────────────────── */
+.auth-pw-strength-bar {
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--border-subtle);
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.auth-pw-strength-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.auth-pw-strength-fill.weak {
+  width: 33%;
+  background: var(--rose);
+}
+
+.auth-pw-strength-fill.medium {
+  width: 66%;
+  background: var(--amber);
+}
+
+.auth-pw-strength-fill.strong {
+  width: 100%;
+  background: var(--emerald);
+}
+
+.auth-pw-strength-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ── Loading State for Buttons ───────────────────────────────────────────── */
+.btn[data-loading='true'] {
+  opacity: 0.65;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* ── Account Modal Sections ──────────────────────────────────────────────── */
+.account-section {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.account-section:last-child {
+  border-bottom: none;
+}
+
+.account-section-title {
+  font-weight: 700;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.danger-zone-section {
+  border-top: 1px solid var(--rose-glow) !important;
+}
+
+.danger-zone-section .account-section-title {
+  color: var(--rose);
+}
