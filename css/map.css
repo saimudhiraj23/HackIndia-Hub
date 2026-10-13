@@ -1,0 +1,125 @@
+/* ==========================================================================
+   INDIA MAP INTERACTIVE STYLES
+   ========================================================================== */
+
+.map-container-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  backdrop-filter: blur(16px);
+  margin-bottom: 2.5rem;
+}
+
+.map-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-dot.high { background: var(--saffron); box-shadow: 0 0 8px var(--saffron-glow); }
+.legend-dot.med { background: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow); }
+.legend-dot.low { background: #334155; }
+
+.interactive-india-svg {
+  width: 100%;
+  max-width: 580px;
+  height: auto;
+  filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.1));
+}
+
+.state-path {
+  fill: #141e33;
+  stroke: rgba(0, 242, 254, 0.35);
+  stroke-width: 1.2;
+  transition: all 0.22s ease;
+  cursor: pointer;
+}
+
+.state-path:hover {
+  fill: var(--cyan);
+  stroke: #ffffff;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 14px var(--cyan-glow));
+}
+
+.state-path.state-active {
+  fill: var(--saffron) !important;
+  stroke: #ffffff !important;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 18px var(--saffron-glow));
+}
+
+.state-path.has-many {
+  fill: #1d2a4a;
+  stroke: rgba(0, 242, 254, 0.6);
+}
+
+.state-pulse-node {
+  fill: var(--cyan);
+  cursor: pointer;
+  animation: map-node-pulse 2s infinite;
+}
+
+@keyframes map-node-pulse {
+  0%, 100% { r: 5px; opacity: 1; }
+  50% { r: 8px; opacity: 0.6; }
+}
+
+.map-info-panel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.selected-state-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.selected-state-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.selected-state-count-badge {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
+  background: rgba(0, 242, 254, 0.15);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+}
